@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>teach_and_repeat</name>
+  <version>0.0.1</version>
+  <description>This package provides functionality for teaching and repeating (Teach and Repeat) navigation paths.</description>
+  <maintainer email="jardel.dyonisio@hotmail.com">Jardel Dyonisio</maintainer>
+  <license>TODO: License</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <build_depend>tf_transformations</build_depend>
+  <build_depend>navigation2</build_depend>
+  <build_depend>nav2_bringup</build_depend>
+  <build_depend>turtlebot3_navigation2</build_depend>
+  <build_depend>turtlebot3_simulations</build_depend>
+  <build_depend>turtlebot3_gazebo</build_depend>
+  <build_depend>teleop_twist_keyboard</build_depend>
+
+  <!-- Run dependencies are required to run the code -->
+  
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <!-- ROS Interface Package -->
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
