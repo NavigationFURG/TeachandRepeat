@@ -60,8 +60,8 @@ class TeachPathCoords(Node):
         self.dock_marker_pub = self.create_publisher(Marker, '/teach_and_repeat/teach/dock_markers', 10)
 
         # Declare parameters
-        self.declare_parameter('reference_frame', 'map')
-        self.declare_parameter('teach_orientation', True)
+        self.declare_parameter('reference_frame', 'odom')
+        self.declare_parameter('teach_orientation', False)
 
         # Get parameters from launch file
         reference_frame = self.get_parameter('reference_frame').get_parameter_value().string_value
@@ -272,7 +272,7 @@ class TeachPathCoords(Node):
             else:
                 self.path_name = 'path_coords'
             ws_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../.."))
-            self.file_path = os.path.join(ws_dir, "src", "lognav", "teach_and_repeat", "path_saves", f"{self.path_name}.txt")
+            self.file_path = os.path.join(ws_dir, "src", "TeachandRepeat", "path_saves", f"{self.path_name}.txt")
             if self.teach_orientation == True:
                 saveOrientedCoordsToFile(self.file_path, self.path_coords)
             else:
@@ -305,7 +305,7 @@ class TeachPathCoords(Node):
                 return response
             
             ws_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../.."))
-            path_saves_dir = os.path.join(ws_dir, "src", "lognav", "teach_and_repeat", "path_saves")
+            path_saves_dir = os.path.join(ws_dir, "src", "TeachandRepeat", "path_saves")
 
             # Ensure the path_saves directory exists
             os.makedirs(path_saves_dir, exist_ok=True)
