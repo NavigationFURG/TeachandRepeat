@@ -22,7 +22,9 @@ extensions = [
     'myst_parser',
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
-    'sphinx.ext.viewcode'
+    'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx',
+    'sphinxcontrib.youtube'
 ]
 
 templates_path = ['_templates']
