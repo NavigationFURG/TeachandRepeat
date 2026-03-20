@@ -1,8 +1,5 @@
-Teach and Repeat documentation
-==============================
+Teach and Repeat
+================
 
-.. include:: ../../README.md
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+.. include:: ../README.md
+   :parser: myst_parser.sphinx_
