@@ -4,7 +4,7 @@ Setup
 System Dependencies
 -------------------
 
-- [ROS 2 Humble](https://docs.ros.org/en/humble/Installation.html)
+- `ROS 2 Humble <https://docs.ros.org/en/humble/Installation.html>`_
 - Ubuntu 22.04
 - Colcon Common Extensions
 
