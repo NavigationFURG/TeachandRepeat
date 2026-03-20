@@ -2,4 +2,22 @@ Teach and Repeat
 ================
 
 .. include:: ../README.md
-   :parser: myst_parser.sphinx_
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Setup
+
+   dependencies
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Usage
+
+   demonstrate_path
+   follow_path
+
+.. toctree::
+   :maxdepth: 2
+   :caption: System
+
+   methods
