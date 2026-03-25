@@ -1,0 +1,4 @@
+[submodule "src/PiecewiseG1BezierFit"]
+	path = src/PiecewiseG1BezierFit
+	url = https://github.com/lognav4-0/PiecewiseG1BezierFit
+	branch = single_bezier
