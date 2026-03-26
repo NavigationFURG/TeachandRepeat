@@ -28,6 +28,7 @@ install(
   scripts/points_at_interval.py
   nodes/repeat_path_coords.py
   nodes/navigate_through_poses.py
+  nodes/turtle_teleop.py
   scripts/utils.py
   scripts/generate_lookahead.py
   nodes/repeat_bezier_path.py
