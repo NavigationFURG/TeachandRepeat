@@ -56,7 +56,7 @@ WAFFLE_MAX_ANG_VEL = 1.82
 LIN_VEL_STEP_SIZE = 0.01
 ANG_VEL_STEP_SIZE = 0.1
 
-TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
+TURTLEBOT3_MODEL = 'waffle'
 
 msg = """
 Control Your TurtleBot3!
