@@ -74,8 +74,13 @@ ros2 run teach_and_repeat teach_path_coords.py
 | Parameter         | Default Value | Description                                                                 |
 |-------------------|---------------|-----------------------------------------------------------------------------|
 | `reference_frame` | `map`         | The reference frame for the path points. If set to `map`, the points are relative to the map frame. If set to `odom`, the points are relative to the robot's odometry frame. |
-
+|`teach_orientation`| `false`       | If orientation is to be recorded, along with (x, y) points. If set to `true`, each point will have (x,y,θ), where θ is the yaw robot pose. Useful for global planners from Nav2 that must have robot's orientation, such as Hybrid A*.|
 After that, you have to press `ENTER` to start recording.
+
+If needed, you can start the node customizing flag values:
+```bash
+ros2 run teach_and_repeat teach_path_coords.py --ros-args -p reference_frame:=map -p teach_orientation:=true
+```
 
 To save the current path, you have to open another terminal and use this command:
 ```bash
