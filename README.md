@@ -79,12 +79,14 @@ After that, you have to press `ENTER` to start recording.
 
 To save the current path, you have to open another terminal and use this command:
 ```bash
-ros2 service call /save_path teach_and_repeat/srv/SavePath
+ros2 service call /teach_and_repeat/teach/save_path teach_and_repeat/srv/SavePath
+
 ```
 
 Using the command above the default path name is `path_coords`. To change it, use the following command:
 ```bash
-ros2 service call /save_path teach_and_repeat/srv/SavePath "{path_name: 'DESIRED_PATH_NAME'}"
+ros2 service call /teach_and_repeat/teach/save_path teach_and_repeat/srv/SavePath "{path_name: 'DESIRED_PATH_NAME'}"
+
 ```
 
 To end the demonstration press CTRL + C.
