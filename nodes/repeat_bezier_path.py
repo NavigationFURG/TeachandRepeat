@@ -162,16 +162,16 @@ class RepeatBezierPath(Node):
         # When use path absolute the path is on install folder, so joint there
         # and go back to the root folder of the project
         ws_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../.."))
-        package_src_path = os.path.join(ws_dir, "src", "lognav", "teach_and_repeat")
+        package_src_path = os.path.join(ws_dir, "src", "TeachandRepeat")
         base_to_create_folder = os.path.join(package_src_path, "path_saves/")
 
-        path_folder_to_copy = os.path.join(base_to_create_folder, "circular_path.txt")
+        path_folder_to_copy = os.path.join(base_to_create_folder, "TEST_PATH.txt")
         self.folder_path = create_folder_with_datetime(base_to_create_folder)
         copy_file(path_folder_to_copy, self.folder_path)
 
         # Coleta dados de posição de quando o veiculo
         # foi teleoperado.
-        self.file_teleop_path = os.path.join(base_to_create_folder, "circular_path.txt")
+        self.file_teleop_path = os.path.join(base_to_create_folder, "TEST_PATH.txt")
         self.teleop_path_points = getPointsFromFile(self.file_teleop_path)
     
         # Retorna os pontos de controle para os pontos
