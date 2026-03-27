@@ -20,7 +20,7 @@ To install the teach package, follow the instructions below and its expected tha
 **Note:** Use 'Pose2DEstimation' to define the initial position.
 
  It should look like this:
-.. image:: /images/simulation.jpeg
+.. image:: /images/simulation.png
    :align: center
 
 3. Open another terminal, source the workspace, and start the teach node:
