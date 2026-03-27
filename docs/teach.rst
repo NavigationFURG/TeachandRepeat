@@ -40,6 +40,7 @@ To install the teach package, follow the instructions below and its expected tha
 or
 
 .. code-block:: bash
+
    ros2 run teach_and_repeat turtle_teleop.py
 
 **Note:** Now, you can control the robot, it's recommended to make a linear path. (FAZER VIDEO)
