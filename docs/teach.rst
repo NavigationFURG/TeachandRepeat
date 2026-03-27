@@ -19,8 +19,9 @@ To install the teach package, follow the instructions below and its expected tha
 
 **Note:** Use 'Pose2DEstimation' to define the initial position.
 
- It should look like this:
-.. image:: /images/simulation.png
+It should look like this:
+
+.. image:: images/simulation.png
    :align: center
 
 3. Open another terminal, source the workspace, and start the teach node:
@@ -33,15 +34,15 @@ To install the teach package, follow the instructions below and its expected tha
 
 5. In another terminal, source the workspace, and start the teleoperation node:
 
-.. code-block:: bash
+   .. code-block:: bash
 
-   ros2 run teleop_twist_keyboard teleop_twist_keyboard 
+      ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
-or
+   or
 
-.. code-block:: bash
+   .. code-block:: bash
 
-   ros2 run teach_and_repeat turtle_teleop.py
+      ros2 run teach_and_repeat turtle_teleop.py
 
 **Note:** Now, you can control the robot, it's recommended to make a linear path. (FAZER VIDEO)
 
