@@ -36,12 +36,16 @@ To install the teach package, follow the instructions below and its expected tha
 .. code-block:: bash
 
    ros2 run teleop_twist_keyboard teleop_twist_keyboard 
-   or
+
+or
+
+.. code-block:: bash
    ros2 run teach_and_repeat turtle_teleop.py
 
 **Note:** Now, you can control the robot, it's recommended to make a linear path. (FAZER VIDEO)
 
 6. Save the current path:
+
 .. code-block:: bash
 
    ros2 service call /teach_and_repeat/teach/save_path teach_and_repeat/srv/SavePath "{path_name: 'your_path_name'}"
