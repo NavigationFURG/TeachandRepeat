@@ -1,4 +1,4 @@
-Teach and Repeat using Bézier Curves dsadhuasihdsahuidsahui
+Teach and Repeat using Bézier Curves
 ====================================
 
 .. youtube:: crmZR9EUTow
@@ -10,8 +10,7 @@ Teach and Repeat (T&R) is a navigation system for mobile robots that allows them
    :maxdepth: 2
    :caption: Contents:
 
-   setup
-   methods
+   getting_started
    run
    demonstrate_path
    follow_path
