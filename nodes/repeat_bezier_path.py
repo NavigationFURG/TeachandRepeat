@@ -43,7 +43,7 @@ class RepeatBezierPath(Node):
         self.raw_points_marker_pub = self.create_publisher(Marker, 'raw_points', 10)
 
         self.odom_sub = self.create_subscription(PoseWithCovarianceStamped, '/amcl_pose', self.callback_odometry, 10)
-        self.scan_sub = self.create_subscription(LaserScan, 'scan2', self.callback_scan, qos_profile_sensor_data)
+        self.scan_sub = self.create_subscription(LaserScan, 'scan', self.callback_scan, qos_profile_sensor_data)
 
         #parameters
         self.declare_parameter('use_sim', False)
@@ -53,22 +53,22 @@ class RepeatBezierPath(Node):
         if self.use_sim == False:
             self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
         else:
-            self.cmd_vel_pub = self.create_publisher(TwistStamped, '/diff_drive_base_controller/cmd_vel', 10)
+            self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
 
         # Frame ID. If you are using only relatyve data 
         # (IMU, Odometry, etc) you can use 'odom'.
         frame_id = 'map'
 
         # Constante velocity
-        self.tractor_velocity = 0.2
+        self.tractor_velocity = 0.1
 
         # threshold_dist btw tractor and coord
         self.threshold_dist = 0.8
 
-        self.tyre_radius = 0.0775
+        self.tyre_radius = 0.033
 
         # Distance between wheels
-        self.distance_btw_wheels = 0.41
+        self.distance_btw_wheels = 0.178
 
         # Future Behavior Parameters
         self.points_per_paths = 12
