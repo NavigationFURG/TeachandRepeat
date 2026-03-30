@@ -19,6 +19,7 @@ To follow a path, first ensure that the coordinates from the path demonstration 
 
 
 3. Open another terminal, navigate to the root of your workspace and source it:
+
 .. code-block:: bash
 
     cd ~/lognav_ws
