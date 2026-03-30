@@ -6,6 +6,7 @@
 import os
 import json
 import rclpy
+import time
 import threading
 import sys
 import select
@@ -154,6 +155,8 @@ class TeachPathCoords(Node):
             point.x = x
             point.y = y
             
+
+            time.sleep(1.5) # sleep to avoid recording too many points in a short time, we use it to simulate amcl_pose update rate
             self.path_coords.append(point)
             self.marker_publisher(point)
         else:

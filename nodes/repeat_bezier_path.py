@@ -53,7 +53,11 @@ class RepeatBezierPath(Node):
         if self.use_sim == False:
             self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
         else:
+<<<<<<< HEAD
             self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
+=======
+            self.cmd_vel_pub = self.create_publisher(TwistStamped, '/cmd_vel', 10)
+>>>>>>> 68b0cc5a39c3609aaf2fabead55a8abd4442152c
 
         # Frame ID. If you are using only relatyve data 
         # (IMU, Odometry, etc) you can use 'odom'.
