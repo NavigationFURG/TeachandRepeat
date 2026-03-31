@@ -15,9 +15,9 @@ To install the teach package, follow the instructions below and its expected tha
 
 .. code-block:: bash
 
-   ros2 launch nav2_bringup tb3_simulation_launch.py headless:=false
+   ros2 launch nav2_bringup tb3_simulation_launch.py headless:=False
 
-**Note:** Use 'Pose2DEstimation' to define the initial position.
+**Note:** Use `Pose2DEstimation` to define the initial position.
 
 It should look like this:
 
@@ -46,7 +46,7 @@ After that, press `ENTER` to start recording.
 
 5. Save the current path:
 
-In another terminal, source the workspace 'source ./install/setup.bash', and call the service to save the path:
+In another terminal, source the workspace `source ./install/setup.bash`, and call the service to save the path:
 
 .. code-block:: bash
 
