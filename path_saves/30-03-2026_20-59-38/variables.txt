@@ -1,0 +1,13 @@
+tyre_radius: 0.033
+max_steering: 0.5
+min_steering: -0.5
+tractor_velocity: 0.1
+points_per_paths: 12
+dist_btw_points: 0.2
+lookahead_total_paths: 30
+threshold_dist: 0.8
+sim_steps: 100
+dt: 0.01
+duration_time: 1.6570527950922649
+erro_percentual: 5.083508391527083
+erro_percentual_bezier: 1.785873372033669

@@ -53,11 +53,7 @@ class RepeatBezierPath(Node):
         if self.use_sim == False:
             self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
         else:
-<<<<<<< HEAD
             self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
-=======
-            self.cmd_vel_pub = self.create_publisher(TwistStamped, '/cmd_vel', 10)
->>>>>>> 68b0cc5a39c3609aaf2fabead55a8abd4442152c
 
         # Frame ID. If you are using only relatyve data 
         # (IMU, Odometry, etc) you can use 'odom'.
@@ -169,13 +165,13 @@ class RepeatBezierPath(Node):
         package_src_path = os.path.join(ws_dir, "src", "TeachandRepeat")
         base_to_create_folder = os.path.join(package_src_path, "path_saves/")
 
-        path_folder_to_copy = os.path.join(base_to_create_folder, "TEST_PATH.txt")
+        path_folder_to_copy = os.path.join(base_to_create_folder, "TEST2_PATH.txt")
         self.folder_path = create_folder_with_datetime(base_to_create_folder)
         copy_file(path_folder_to_copy, self.folder_path)
 
         # Coleta dados de posição de quando o veiculo
         # foi teleoperado.
-        self.file_teleop_path = os.path.join(base_to_create_folder, "TEST_PATH.txt")
+        self.file_teleop_path = os.path.join(base_to_create_folder, "TEST2_PATH.txt")
         self.teleop_path_points = getPointsFromFile(self.file_teleop_path)
     
         # Retorna os pontos de controle para os pontos

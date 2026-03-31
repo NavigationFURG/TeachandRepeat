@@ -46,6 +46,8 @@ After that, press `ENTER` to start recording.
 
 5. Save the current path:
 
+In another terminal, source the workspace 'source ./install/setup.bash', and call the service to save the path:
+
 .. code-block:: bash
 
    ros2 service call /teach_and_repeat/teach/save_path teach_and_repeat/srv/SavePath "{path_name: 'your_path_name'}"
