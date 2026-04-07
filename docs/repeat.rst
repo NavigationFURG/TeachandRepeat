@@ -45,3 +45,18 @@ Now, you can observe the robot following the path that was demonstrated:
 .. image:: images/video_repeat.gif
    :align: center
    :width: 600px
+
+Configuration Parameters
+------------------------
+
+The node has a set of parameters that must be adjusted to match the physical and behavioral characteristics of each robot. These values are defined in ``repeat_bezier_path.py`` and vary from robot to robot.
+
+- **tyre_radius**: Radius of the robot's wheels. Depends on the robot's hardware.
+- **distance_btw_wheels**: Distance between the left and right wheels. Depends on the robot's chassis.
+- **tractor_velocity**: Linear velocity used during path following. Should be tuned according to the robot's capabilities and the environment.
+- **threshold_dist**: How close the robot must be to a waypoint before advancing to the next one. May need adjustment depending on the robot's localization precision.
+- **max_steering** / **min_steering**: Maximum and minimum steering angles allowed. Depends on the robot's kinematic constraints.
+- **lookahead_total_paths**: Number of candidate future paths evaluated at each step. Higher values improve path selection at the cost of computation.
+- **points_per_paths**: Number of points simulated per candidate path.
+- **dist_btw_points**: Spacing between consecutive points on the Bézier curve. Affects path resolution.
+- **dt** / **sim_steps**: Time step and number of steps used in the internal kinematic simulation for generating lookahead paths.
