@@ -33,7 +33,7 @@ Then, run the path following node:
     ros2 run teach_and_repeat repeat_bezier_path.py
 
 
-**Note:** After starting the repeat node, set a pose using `2DPoseEstimate`. The robot will immediately begin following the path.
+4. After starting the repeat node, set a pose using `2DPoseEstimate`. The robot will immediately begin following the path.
 
 Like the image below:
 
