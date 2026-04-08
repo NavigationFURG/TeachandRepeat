@@ -11,12 +11,8 @@ Teach and Repeat (T&R) is a navigation system for mobile robots that allows them
    :caption: Contents:
 
    getting_started
-   run
-   demonstrate_path
-   follow_path
    teach
    repeat
-
 
 Indices and tables
 ==================
