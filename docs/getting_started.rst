@@ -27,7 +27,7 @@ Clone this repository along with its submodules:
 
 .. code-block:: zsh
 
-    git clone --recurse-submodules https://github.com/jardeldyonisio/teach_and_repeat.git
+    git clone --recurse-submodules https://github.com/NavigationFURG/TeachandRepeat.git
 
 Make the installation script executable and run it with superuser privileges:
 
@@ -75,9 +75,34 @@ Once the dependencies are installed, proceed with building the workspace. First,
         source ./install/setup.zsh
         colcon build
 
+Install Nav2 (required for navigation integration):
+
+.. code-block:: bash
+
+    sudo apt install ros-humble-navigation2 
+    sudo apt install ros-humble-nav2-bringup
+
 Install the TurtleBot3 simulation for Gazebo Classic:
 
 .. code-block:: bash
 
     sudo apt install ros-humble-turtlebot3
     sudo apt install ros-humble-turtlebot3-gazebo
+
+Configure TurtleBot3 environment variables:
+
+.. code-block:: bash
+
+    source /opt/ros/humble/setup.bash 
+    export TURTLEBOT3_MODEL=burger  # Iron and older only with Gazebo Classic 
+    export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/humble/share/turtlebot3_gazebo/models # Iron and older only with Gazebo Classic
+
+.. note::
+
+    These environment variables must be set **every time** before launching the simulation.
+
+.. important::
+
+    All examples in this documentation are based on **Gazebo Classic**, which is fully supported and stable.
+
+    The system is expected to work with newer versions of Gazebo.
