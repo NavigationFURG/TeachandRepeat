@@ -42,10 +42,10 @@ Like the image below:
 
 Now, you can observe the robot following the path that was demonstrated:
 
-.. image:: images/video_repeat.gif
+.. image:: images/repeat_path.gif
    :align: center
    :width: 600px
-
+   
 Configuration Parameters
 ------------------------
 
