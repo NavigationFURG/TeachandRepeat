@@ -11,7 +11,15 @@ To install the teach package, follow the instructions below and its expected tha
    source /opt/ros/humble/setup.bash
    source ./install/setup.bash
 
-2. Launch the navigation system:
+2. After launch the navigation package, it's necessary export the turtlebot3 models:
+
+.. code-block:: bash
+ 
+   export TURTLEBOT3_MODEL=burger  # Iron and older only with Gazebo Classic  
+   export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/humble/share/turtlebot3_gazebo/models # Iron and older only with Gazebo Classic
+
+
+3. Launch the navigation system:
 
 .. code-block:: bash
 
@@ -24,7 +32,7 @@ It should look like this:
 .. image:: images/simulation.png
    :align: center
 
-3. Open another terminal, source the workspace, and start the teach node:
+4. Open another terminal, source the workspace, and start the teach node:
 
 .. code-block:: bash
 
@@ -32,7 +40,13 @@ It should look like this:
 
 After that, press `ENTER` to start recording.
 
-4. In another terminal, source the workspace, and start the teleoperation node:
+5. In another terminal, source the workspace, and install the teleoperation node:
+
+.. code-block:: bash
+
+   sudo apt install ros-humble-teleop-twist-keyboard
+
+6. In another terminal, source the workspace, and start the teleoperation node:
 
    .. code-block:: bash
 
@@ -44,7 +58,7 @@ After that, press `ENTER` to start recording.
 
 **Note:** Now, you can control the robot, it's recommended to make a linear path. (FAZER VIDEO)
 
-5. Save the current path:
+7. Save the current path:
 
 In another terminal, source the workspace `source ./install/setup.bash`, and call the service to save the path:
 
