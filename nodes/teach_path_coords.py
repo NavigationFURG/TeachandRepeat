@@ -61,7 +61,7 @@ class TeachPathCoords(Node):
         self.dock_marker_pub = self.create_publisher(Marker, '/teach_and_repeat/teach/dock_markers', 10)
 
         # Declare parameters
-        self.declare_parameter('reference_frame', 'odom')
+        self.declare_parameter('reference_frame', 'map')
         self.declare_parameter('teach_orientation', False)
 
         # Get parameters from launch file

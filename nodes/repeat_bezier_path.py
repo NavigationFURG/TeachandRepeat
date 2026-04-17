@@ -60,19 +60,19 @@ class RepeatBezierPath(Node):
         frame_id = 'map'
 
         # Constante velocity
-        self.tractor_velocity = 0.1
+        self.tractor_velocity = 0.15
 
         # threshold_dist btw tractor and coord
         self.threshold_dist = 0.8
 
-        self.tyre_radius = 0.033
+        self.tyre_radius = 0.035
 
         # Distance between wheels
-        self.distance_btw_wheels = 0.178
+        self.distance_btw_wheels = 0.23
 
         # Future Behavior Parameters
-        self.points_per_paths = 12
-        self.dist_btw_points = 0.2
+        self.points_per_paths = 9
+        self.dist_btw_points = 0.1
         self.lookahead_total_paths = 30
 
         # Simulation
@@ -80,8 +80,8 @@ class RepeatBezierPath(Node):
         self.sim_steps = 100
 
         self.tractor_angle = 0.0
-        self.max_steering = 0.5
-        self.min_steering = -0.5
+        self.max_steering = 0.3
+        self.min_steering = -0.3
         self.is_to_stop = False
         self.lookahead_updated = dict()
         self.steering_angle = 0.0
@@ -165,13 +165,13 @@ class RepeatBezierPath(Node):
         package_src_path = os.path.join(ws_dir, "src", "TeachandRepeat")
         base_to_create_folder = os.path.join(package_src_path, "path_saves/")
 
-        path_folder_to_copy = os.path.join(base_to_create_folder, "TEST2_PATH.txt")
+        path_folder_to_copy = os.path.join(base_to_create_folder, "turtle_mod.txt")
         self.folder_path = create_folder_with_datetime(base_to_create_folder)
         copy_file(path_folder_to_copy, self.folder_path)
 
         # Coleta dados de posição de quando o veiculo
         # foi teleoperado.
-        self.file_teleop_path = os.path.join(base_to_create_folder, "TEST2_PATH.txt")
+        self.file_teleop_path = os.path.join(base_to_create_folder, "turtle_mod.txt")
         self.teleop_path_points = getPointsFromFile(self.file_teleop_path)
     
         # Retorna os pontos de controle para os pontos

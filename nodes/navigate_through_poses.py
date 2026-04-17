@@ -24,7 +24,7 @@ class NavigateThroughPoses(Node):
         self.navigator = BasicNavigator()
         
         # Declare parameters
-        self.declare_parameter('path_file', 'intersection.txt')
+        self.declare_parameter('path_file', 'turtle_mod.txt')
         self.declare_parameter('frame_id', 'map')
         
         # Get parameters
