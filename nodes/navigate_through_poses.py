@@ -24,7 +24,7 @@ class NavigateThroughPoses(Node):
         self.navigator = BasicNavigator()
         
         # Declare parameters
-        self.declare_parameter('path_file', 'turtle_mod.txt')
+        self.declare_parameter('path_file', 'turtle_path_oriented.txt')
         self.declare_parameter('frame_id', 'map')
         
         # Get parameters
@@ -103,12 +103,12 @@ class NavigateThroughPoses(Node):
                 self.get_logger().error('No poses found')
                 return
             
-            behavior_tree_share = get_package_share_directory('lognav_navigation')
-            behavior_tree_file = os.path.join(behavior_tree_share, 'bt', 'navigate_no_replan.xml')
+            # behavior_tree_share = get_package_share_directory('kobuki_nav2')
+            # behavior_tree_file = os.path.join(behavior_tree_share, 'bt', 'navigate_no_replan.xml')
 
             # Send poses for navigation
-            self.navigator.goThroughPoses(self.path_poses,
-                                          behavior_tree=behavior_tree_file)
+            self.navigator.goThroughPoses(self.path_poses)
+                                        #   behavior_tree=behavior_tree_file)
             
             # Monitor navigation progress
             self.monitor_navigation()

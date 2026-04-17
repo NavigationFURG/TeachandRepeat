@@ -62,7 +62,7 @@ class TeachPathCoords(Node):
 
         # Declare parameters
         self.declare_parameter('reference_frame', 'map')
-        self.declare_parameter('teach_orientation', False)
+        self.declare_parameter('teach_orientation', True)
 
         # Get parameters from launch file
         reference_frame = self.get_parameter('reference_frame').get_parameter_value().string_value
