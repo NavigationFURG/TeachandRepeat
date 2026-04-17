@@ -1,4 +1,4 @@
-Teach Guide
+2. Teach Guide
 ================
 
 To first-time users of the teach module from T&R package, follow the instructions below, It is expected that you already have followed the installation steps in the :ref:`getting_started` guide.:
@@ -29,7 +29,7 @@ To first-time users of the teach module from T&R package, follow the instruction
 
 Your interface should look like this:
 
-.. image:: images/simulation.png
+.. image:: ../images/simulation.png
    :align: center
 
 4. Open another terminal, source the workspace, and start the teach node from T&R:

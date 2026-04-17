@@ -14,9 +14,9 @@ If it is your first time using the package, it is recommended to follow the :ref
    :maxdepth: 2
    :caption: Contents:
 
-   getting_started
-   teach
-   repeat
+   tutorial/index
+   teaching_method/index
+   repeat_method/index
 
 Indices and tables
 ==================

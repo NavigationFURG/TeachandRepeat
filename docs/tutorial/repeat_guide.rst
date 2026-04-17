@@ -1,4 +1,4 @@
-Repeat Guide
+3. Repeat Guide
 ================
 
 To follow a path, first ensure that the coordinates from the path demonstration are stored in the `path_saves/your_file.txt` file. This file is also the default file read during the path following process. Make sure you start from the same point where the demonstration began.
@@ -37,12 +37,12 @@ Then, run the path following node:
 
 Like the image below:
 
-.. image:: images/2d_estimateRepeat.jpeg
+.. image:: ../images/2d_estimateRepeat.jpeg
    :align: center
 
 Now, you can observe the robot following the path that was demonstrated:
 
-.. image:: images/repeat_path.gif
+.. image:: ../images/repeat_path.gif
    :align: center
    :width: 600px
    

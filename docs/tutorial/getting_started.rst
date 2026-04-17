@@ -1,12 +1,13 @@
 .. _getting_started:
 
-Getting Started
-###############
+1. Getting Started
+###################
 
 This repository implements a **Teach and Repeat** (T&R) navigation system for mobile robots, allowing them to autonomously follow previously demonstrated paths.
 
 Requirements
 ************
+
 - `ROS 2 Humble <https://docs.ros.org/en/humble/Installation.html>`;
 - Ubuntu 22.04;
 - Colcon Common Extensions;
@@ -20,6 +21,7 @@ Requirements
 
 Installation
 ************
+
 To set up the Teach and Repeat system, follow these steps:
 
 First, create a workspace directory and navigate into it:
