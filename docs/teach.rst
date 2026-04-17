@@ -1,17 +1,17 @@
 Teach Guide
 ================
 
-To install the teach package, follow the instructions below and its expected that you already have the turtlebot3 packages installed:
+To first-time users of the teach module from T&R package, follow the instructions below, It is expected that you already have followed the installation steps in the :ref:`getting_started` guide.:
 
 1. Navigate to the root of your workspace and source it:
 
 .. code-block:: bash
 
-   cd ~/ros2_ws
+   cd ~/teach_repeat_ws
    source /opt/ros/humble/setup.bash
    source ./install/setup.bash
 
-2. After launch the navigation package, it's necessary export the turtlebot3 models:
+2. Export the turtlebot3 models, if using Gazebo Classic.
 
 .. code-block:: bash
  
@@ -19,20 +19,20 @@ To install the teach package, follow the instructions below and its expected tha
    export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/humble/share/turtlebot3_gazebo/models # Iron and older only with Gazebo Classic
 
 
-3. Launch the navigation system:
+3. Launch the turtlebot simulation and navigation system:
 
 .. code-block:: bash
 
    ros2 launch nav2_bringup tb3_simulation_launch.py headless:=False
 
-**Note:** Use `Pose2DEstimation` to define the initial position.
+**Note:** Do not forget to use `Pose2DEstimation` to define the robots initial position!
 
-It should look like this:
+Your interface should look like this:
 
 .. image:: images/simulation.png
    :align: center
 
-4. Open another terminal, source the workspace, and start the teach node:
+4. Open another terminal, source the workspace, and start the teach node from T&R:
 
 .. code-block:: bash
 
@@ -40,7 +40,7 @@ It should look like this:
 
 After that, press `ENTER` to start recording.
 
-5. In another terminal, source the workspace, and install the teleoperation node:
+5. In another terminal, source the workspace, and install the teleoperation node (if not already installed):
 
 .. code-block:: bash
 
@@ -56,11 +56,10 @@ After that, press `ENTER` to start recording.
 
       ros2 run teach_and_repeat turtle_teleop.py
 
-**Note:** Now, you can control the robot, it's recommended to make a linear path. (FAZER VIDEO)
+**Note:** Now, you can control the robot, it's recommended to create a short, linear path just for evaluation.
 
-7. Save the current path:
 
-In another terminal, source the workspace `source ./install/setup.bash`, and call the service to save the path:
+7. In another terminal, source the workspace `source ./install/setup.bash`, and call the service to save the path:
 
 .. code-block:: bash
 

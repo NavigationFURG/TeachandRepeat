@@ -11,7 +11,7 @@ To follow a path, first ensure that the coordinates from the path demonstration 
    source /opt/ros/humble/setup.bash
    source ./install/setup.bash
 
-2. Launch the navigation system:
+2. Launch the turtlebot3 simulation and navigation system:
 
 .. code-block:: bash
 
