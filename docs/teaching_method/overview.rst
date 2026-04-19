@@ -1,4 +1,4 @@
-1. Teaching Method Overview
+1. Overview
 ============================
 
 The Teaching method is a path learning technique that allows a robot to autonomously record its trajectory while being manually guided through an environment. The recorded path can later be replayed by the Repeat module for autonomous navigation. This section provides a detailed explanation of how the teaching mechanism works, its core parameters, data recording formats, and reference frame options.
