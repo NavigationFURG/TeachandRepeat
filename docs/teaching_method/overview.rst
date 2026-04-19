@@ -256,7 +256,7 @@ During path recording, the TeachPathCoords node publishes visualization markers 
 All markers use the same reference frame as the pose data (either "odom" or "map"), ensuring visual consistency in RViz. The markers are updated with current timestamp headers before each publication.
 
 
-9. Service Interfaces
+9. Service Interface
 =====================
 
 **9.1. SavePath Service**
@@ -278,14 +278,6 @@ Behavior:
 - Creates directory if it doesn't exist
 - Overwrites existing file with same name
 
-**9.2. SaveDock Service**
-------------------------
-
-Service name: ``/teach_and_repeat/teach/save_docks``  
-Service type: ``teach_and_repeat/SaveDock``
-
-Request parameters:
-- **dock_name** (string): Name for the dock to register
 
 Response parameters:
 - **success** (boolean): True if dock was registered and saved, False otherwise
