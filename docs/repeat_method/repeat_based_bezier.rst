@@ -434,26 +434,3 @@ The variables.txt file contains key-value pairs in text format:
     erro_percentual: 5.3
     erro_percentual_bezier: 3.1
 
-
-10. Practical Workflow
-======================
-
-A typical repeat execution follows this workflow:
-
-1. **Path Teaching**: Use the Teach module to record a path and save it to ``path_saves/TEST2_PATH.txt``
-2. **Launch Repeat Node**: Start the RepeatBezierPath node
-3. **Wait for Initialization**: The node loads the path, fits Bézier curve, generates lookahead paths
-4. **Initialize Localization**: Run AMCL and ensure the robot is in the correct global position
-5. **Monitor RViz**:
-   - Green line: original taught path
-   - Red line: smooth Bézier approximation
-   - Blue points: lookahead path options
-   - Yellow line: selected optimal path
-6. **Autonomous Following**: The robot moves autonomously following the path
-7. **Real-Time Feedback**: Check terminal output for obstacle detection and path completion
-8. **Check Results**: When complete, examine the timestamped folder for:
-   - error metrics
-   - execution time
-   - actual vs intended trajectory comparison
-
-The repeat module enables robust autonomous path following based on the geometry of the taught path, with optimization at every step to select the best steering angle.
