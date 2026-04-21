@@ -1,14 +1,15 @@
+****************************
 Repeat Method Based on Bézier Curve
-====================================
+****************************
 
 Overview
---------
+========
 
 The Repeat method enables a robot to autonomously follow a previously taught path using Bézier curve fitting and lookahead path planning. The **RepeatBezierPath** ROS2 node loads a pre-recorded path, fits a Bézier curve through the waypoints to create a smooth trajectory, generates multiple lookahead trajectories for different steering angles, and selects the optimal steering command in real-time by comparing each simulated path against the reference curve. This approach smooths discrete waypoints into a continuous curve and optimizes trajectory selection at every step.
 
 
 Architecture and Core Components
-====================================
+=============================
 
 The repeat system is implemented through the **RepeatBezierPath** ROS2 node, which operates as an autonomous path follower that:
 
@@ -23,7 +24,7 @@ The repeat system is implemented through the **RepeatBezierPath** ROS2 node, whi
 
 
 Parameters
-==================
+==========
 
 The repeat module is controlled by multiple parameters that determine path smoothness, lookahead planning depth, steering constraints, and robot kinematics:
 
@@ -104,7 +105,7 @@ The Bézier curve fitting uses least-squares optimization to compute control poi
 
 
 Operating Principles and Path Following
-============================================
+========================================
 
 **Initialization and Setup**
 ---------------------------------
@@ -157,19 +158,27 @@ Once path following begins, the node executes this cycle at every odometry updat
 
 The node converts desired steering angles to differential wheel velocities using:
 
-$$\text{left\_wheel\_speed} = \text{tractor\_velocity} - \text{steering\_angle} \times \frac{\text{distance\_btw\_wheels}}{2}$$
+.. math::
 
-$$\text{right\_wheel\_speed} = \text{tractor\_velocity} + \text{steering\_angle} \times \frac{\text{distance\_btw\_wheels}}{2}$$
+    \text{left\_wheel\_speed} = \text{tractor\_velocity} - \text{steering\_angle} \times \frac{\text{distance\_btw\_wheels}}{2}
+
+.. math::
+
+    \text{right\_wheel\_speed} = \text{tractor\_velocity} + \text{steering\_angle} \times \frac{\text{distance\_btw\_wheels}}{2}
 
 These wheel speeds are then converted to linear and angular velocity commands:
 
-$$v_{linear} = \frac{\text{left\_wheel\_speed} + \text{right\_wheel\_speed}}{2}$$
+.. math::
 
-$$v_{angular} = \frac{\text{right\_wheel\_speed} - \text{left\_wheel\_speed}}{\text{distance\_btw\_wheels}}$$
+    v_{linear} = \frac{\text{left\_wheel\_speed} + \text{right\_wheel\_speed}}{2}
+
+.. math::
+
+    v_{angular} = \frac{\text{right\_wheel\_speed} - \text{left\_wheel\_speed}}{\text{distance\_btw\_wheels}}
 
 
 Bézier Curve Generation and Fitting
-=======================================
+====================================
 
 **Why Bézier Curves**
 ---------------------------
@@ -224,7 +233,7 @@ Each line represents a waypoint on the smoothed Bézier curve, uniformly spaced 
 
 
 Lookahead Path Generation
-=============================
+==========================
 
 **Concept of Lookahead Paths**
 -----------------------------------
@@ -244,7 +253,7 @@ For each of the ``lookahead_total_paths`` steering angles:
 2. **Trajectory Simulation**: Simulate robot motion using kinematic equations:
    - Assume constant velocity (``tractor_velocity``)
    - Apply the given steering angle
-   - Compute the curvature of motion: $\kappa = \frac{\tan(\text{steering})}{\text{wheelbase}}$
+   - Compute the curvature of motion: :math:`\kappa = \frac{\tan(\text{steering})}{\text{wheelbase}}`
 3. **Point Generation**: Generate ``points_per_paths`` future waypoints along this simulated trajectory
 4. **Point Spacing**: Ensure points are spaced at ``dist_btw_points`` distance
 5. **Storage**: Store in dictionary with steering angle as key
@@ -254,7 +263,9 @@ For each of the ``lookahead_total_paths`` steering angles:
 
 The ``lookahead_total_paths`` steering angles are distributed uniformly between ``min_steering`` and ``max_steering``:
 
-$$\text{angle\_i} = \text{min\_steering} + \frac{i}{\text{lookahead\_total\_paths} - 1} \times (\text{max\_steering} - \text{min\_steering})$$
+.. math::
+
+    \text{angle\_i} = \text{min\_steering} + \frac{i}{\text{lookahead\_total\_paths} - 1} \times (\text{max\_steering} - \text{min\_steering})
 
 For default parameters with 30 paths, ``min_steering=-0.5``, ``max_steering=0.5``:
 - Steering angles range from -0.5 to +0.5 radians
@@ -262,14 +273,16 @@ For default parameters with 30 paths, ``min_steering=-0.5``, ``max_steering=0.5`
 
 
 Path Following Mechanism
-=============================
+=========================
 
 **Cost Function and Path Comparison**
 -------------------------------------------
 
 At each cycle, the algorithm compares each lookahead path against the reference Bézier curve segment using the **compare_bezier_lookahead** function. This function calculates a cost metric representing the alignment error:
 
-$$\text{cost} = \sum_{i=0}^{n} \text{distance}(\text{lookahead\_point}_i, \text{reference\_point}_i)$$
+.. math::
+
+    \text{cost} = \sum_{i=0}^{n} \text{distance}(\text{lookahead\_point}_i, \text{reference\_point}_i)
 
 This measures how well the simulated future trajectory aligns with the desired path. Lower cost indicates better alignment.
 
@@ -295,19 +308,23 @@ The algorithm uses two coordinate frames:
 
 Transformation from local to global:
 
-$$x_{global} = x_{robot} + d \times \cos(\text{angle} + \theta_{robot})$$
+.. math::
 
-$$y_{global} = y_{robot} + d \times \sin(\text{angle} + \theta_{robot})$$
+    x_{global} = x_{robot} + d \times \cos(\text{angle} + \theta_{robot})
+
+.. math::
+
+    y_{global} = y_{robot} + d \times \sin(\text{angle} + \theta_{robot})
 
 where:
-- $(x_{robot}, y_{robot})$ = current robot position
-- $d$ = distance from robot to point
+- :math:`(x_{robot}, y_{robot})` = current robot position
+- :math:`d` = distance from robot to point
 - angle = angle to point in local frame
-- $\theta_{robot}$ = current robot heading
+- :math:`\theta_{robot}` = current robot heading
 
 
 Real-Time Visualization in RViz
-===================================
+================================
 
 **Published Markers**
 --------------------------
@@ -363,7 +380,7 @@ This real-time visualization enables monitoring of:
 
 
 Execution Data and Output Files
-===================================
+===============================
 
 **Output Folder Structure**
 --------------------------------
@@ -375,7 +392,7 @@ Inside this folder, the following files are created:
 **File Outputs**
 ---------------------
 
-**TEST2_PATH.txt**
+**your_file.txt**
   - Copy of the original taught path file
   - Format: x,y coordinates, one per line
   - Purpose: Reference for comparing followed path
