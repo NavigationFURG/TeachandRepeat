@@ -1,3 +1,6 @@
+.. _repeat_bezier:
+
+
 3. Repeat Guide
 ================
 

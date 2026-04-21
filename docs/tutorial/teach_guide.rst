@@ -1,7 +1,9 @@
+.. _teach_guide:
+
 2. Teach Guide
 ================
 
-To first-time users of the teach module from T&R package, follow the instructions below, It is expected that you already have followed the installation steps in the :ref:`getting_started` guide.:
+To first-time users of the teach module from T&R package, follow the instructions below, It is expected that you already have followed the installation steps in the :ref:`getting_started` guide.
 
 1. Navigate to the root of your workspace and source it:
 
@@ -32,6 +34,7 @@ Your interface should look like this:
 .. image:: ../images/simulation.png
    :align: center
 
+
 4. Open another terminal, source the workspace, and start the teach node from T&R:
 
 .. code-block:: bash
@@ -39,6 +42,13 @@ Your interface should look like this:
    ros2 run teach_and_repeat teach_path_coords.py
 
 After that, press `ENTER` to start recording.
+
+.. important::
+   If you intend to use the repeat with Navigation Stack 2, you MUST teach a oriented path. If so, use the following command: 
+
+   .. code-block:: bash
+         ros2 run teach_and_repeat teach_path_coords.py --ros-args -p teach_orientation:=true
+
 
 5. In another terminal, source the workspace, and install the teleoperation node (if not already installed):
 
@@ -52,7 +62,7 @@ After that, press `ENTER` to start recording.
 
       ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
-      #or
+      #or, if you have issues such as the robot not moving
 
       ros2 run teach_and_repeat turtle_teleop.py
 
