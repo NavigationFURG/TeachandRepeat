@@ -1,5 +1,5 @@
 ****************************
-Repeat Method Based on Bézier Curve
+1. Repeat Method Based on Bézier Curve
 ****************************
 
 Overview
