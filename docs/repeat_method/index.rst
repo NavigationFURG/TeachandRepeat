@@ -4,5 +4,5 @@
 .. toctree::
    :maxdepth: 2
 
-   repeat_based_bezier
-   repeat_based_waypoint
+   repeat_method_bezier/repeat_based_bezier
+   repeat_based_waypoint/repeat_based_waypoint
