@@ -1,32 +1,39 @@
 
-1. Repeat Method Based on Bézier Curve
+1. Repeat Method Based on Bézier Curves
 =========================================
 
 Overview
 ========
 
-The Repeat method enables a robot to autonomously follow a previously taught path using Bézier curve fitting and lookahead path planning. The **RepeatBezierPath** ROS2 node loads a pre-recorded path, fits a Bézier curve through the waypoints to create a smooth trajectory, generates multiple lookahead trajectories for different steering angles, and selects the optimal steering command in real-time by comparing each simulated path against the reference curve. This approach smooths discrete waypoints into a continuous curve and optimizes trajectory selection at every step.
+The Repeat method based on Bézier curves enables a robot to autonomously follow a previously taught path using Bézier curve fitting and a DWA-based lookahead path planning. The **RepeatBezierPath** ROS2 node loads a pre-recorded path, fits a Bézier curve through the waypoints to create a smooth trajectory, generates multiple lookahead trajectories for different steering angles, and selects the optimal steering command in real-time by comparing each simulated path against the reference curve. This approach smooths discrete waypoints into a continuous curve and optimizes trajectory selection at every step.
 
+Originally, this method was suited for Ackermann robots, but also works in differential robots such as the ones we made experiments with. It is a home-made repeating algorithm, it probably has bugs and so we invite *YOU* to help us improve it! For industry-level operations, we recommend using the repeat method based on Waypoint following, which is developed with Navigation Stack 2 features, which are way more stable and less prone to failures.
 
 Architecture and Core Components
 =============================
 
 The repeat system is implemented through the **RepeatBezierPath** ROS2 node, which operates as an autonomous path follower that:
 
-- Loads a pre-recorded path from a text file (saved by the Teaching method)
-- Fits a Bézier curve through the raw waypoints for smooth path approximation
-- Generates multiple lookahead paths representing potential future trajectories
-- Subscribes to robot pose data from localization (/amcl_pose)
-- Evaluates possible steering angles in real-time based on a cost function
-- Publishes optimal velocity and steering commands to the robot
-- Records actual path traversal for path following error analysis
-- Provides real-time visualization of the Bézier curve, lookahead paths, and robot trajectory
+- Loads a pre-recorded path from a text file (saved by the Teaching method);
+- Fits a Bézier curve through the raw waypoints for smooth path approximation;
+- Generates multiple lookahead paths representing potential future trajectories;
+- Subscribes to robot pose data from localization (/amcl_pose);
+- Evaluates possible steering angles in real-time based on a cost function;
+- Publishes optimal velocity and steering commands to the robot;
+- Records actual path traversal for path following error analysis;
+- Provides real-time visualization of the Bézier curve, lookahead paths, and robot trajectory.
 
 
 Parameters
 ==========
 
-The repeat module is controlled by multiple parameters that determine path smoothness, lookahead planning depth, steering constraints, and robot kinematics:
+This repeat module is controlled by multiple parameters that determine path smoothness, lookahead planning depth, steering constraints, and robot kinematics. Here, we will try to make them as simple as possible to understand:
+
+.. important::
+    These parameters must be modified in the source code of repeat_bezier_path.py!
+
+    We also have a default setup for both turtlebot and the logistics robot from the experiments and videos. They are both available at the github source code, in different branches (feat/turtlebot) and (feat/green).
+
 
 **Velocity and Motion Parameters**
 -----------------------------------------
@@ -35,7 +42,7 @@ The repeat module is controlled by multiple parameters that determine path smoot
   Type: float  
   Default: 0.1 m/s  
   
-  The constant linear velocity of the robot while following the path. This value should match the robot's safe operating speed and be appropriate for the environment. The velocity is used to compute wheel speeds through kinematic equations.
+  The constant linear velocity of the robot while following the path. This value should match the robot's common operating speed. The velocity is used to compute wheel speeds through kinematic equations.
 
 **tyre_radius**
   Type: float  
@@ -48,9 +55,9 @@ The repeat module is controlled by multiple parameters that determine path smoot
   Default: 0.178 m  
   
   The wheelbase distance (distance between the robot's two drive wheels) in meters. This euclidean distance is critical for:
-  - Converting steering angles to differential wheel speeds
-  - Computing the Ackermann steering kinematics
-  - Mapping desired curvature to achievable steering angles
+  - Converting steering angles to differential wheel speeds;
+  - Computing steering kinematics;
+  - Mapping desired curvature to achievable steering angles.
 
 **Steering Control Parameters**
 -------------------------------------
@@ -99,9 +106,9 @@ The repeat module is controlled by multiple parameters that determine path smoot
 
 The Bézier curve fitting uses least-squares optimization to compute control points from the raw taught path. This is handled automatically by the **BezierFitDemo** algorithm without explicit parameter tuning. The algorithm:
 
-- Takes the raw path waypoints as input
-- Computes optimal Bézier control points using least-squares fitting
-- The degree of the Bézier curve is determined by the number of control points needed for good approximation
+- Takes the raw path waypoints as input;
+- Computes optimal Bézier control points using least-squares fitting;
+- The degree of the Bézier curve is determined by the number of control points needed for good approximation.
 
 
 Operating Principles and Path Following
@@ -112,46 +119,43 @@ Operating Principles and Path Following
 
 Upon node startup, the RepeatBezierPath node performs the following initialization steps:
 
-1. **Path Loading**: Reads the raw taught path file (default: TEST2_PATH.txt) from ``path_saves/`` directory
-2. **Bézier Fitting**: Computes Bézier control points from raw waypoints using least-squares fitting
-3. **Curve Generation**: Generates a smooth Bézier curve using these control points
-4. **Point Resampling**: Resamples the Bézier curve to ensure ``dist_btw_points`` spacing between consecutive points
-5. **Lookahead Generation**: Creates 30 different lookahead paths representing potential future trajectories for different steering angles
-6. **Data Folder Creation**: Creates a timestamped folder in ``path_saves/`` to store execution data
-7. **Marker Setup**: Initializes all visualization markers for RViz
-8. **Localization Wait**: Waits for the first odometry message from AMCL before starting path following
+1. **Path Loading**: Reads the raw taught path file (default: TEST2_PATH.txt) from ``path_saves/`` directory;
+2. **Bézier Fitting**: Computes Bézier control points from raw waypoints using least-squares fitting;
+3. **Curve Generation**: Generates a smooth Bézier curve using these control points;
+4. **Point Resampling**: Resamples the Bézier curve to ensure ``dist_btw_points`` spacing between consecutive points;
+5. **Lookahead Generation**: Creates lookahead paths representing potential future trajectories for different steering angles;
+6. **Data Folder Creation**: Creates a timestamped folder in ``path_saves/`` to store execution data;
+7. **Marker Setup**: Initializes all visualization markers for RViz;
+8. **Localization Wait**: Waits for the first odometry message from AMCL before starting path following.
 
 **Tracking Window and Sliding Window Mechanism**
 -----------------------------------------------------
 
 The repeat algorithm uses a **sliding window** approach to focus on the immediate future of the path:
 
-- **Window Size**: Defined by ``points_per_paths`` (default: 12 waypoints)
-- **Current Window**: Contains waypoints from index ``new_min`` to index ``new_max``
-- **Reference Points**: These window waypoints serve as the target for lookahead path optimization
-- **Advancement**: When the robot comes within ``threshold_dist`` of the first point in the window, both ``new_min`` and ``new_max`` are incremented, advancing the window to the next set of waypoints
+- **Window Size**: Defined by ``points_per_paths`` (default: 12 waypoints);
+- **Current Window**: Contains waypoints from index ``new_min`` to index ``new_max``;
+- **Reference Points**: These window waypoints serve as the target for lookahead path optimization;
+- **Advancement**: When the robot comes within ``threshold_dist`` of the first point in the window, both ``new_min`` and ``new_max`` are incremented, advancing the window to the next set of waypoints.
 
-This mechanism provides:
-- Computational efficiency by only considering nearby future waypoints
-- Local path optimization (not forced to match distant waypoints)
-- Natural completion detection (when all waypoints are consumed)
+This mechanism provides computational efficiency and ensure a smoother local path following.
 
 **Real-Time Path Following Cycle**
 ----------------------------------------
 
 Once path following begins, the node executes this cycle at every odometry update (~10 Hz from AMCL):
 
-1. **Pose Reception**: Receives current robot position (x, y) and orientation (yaw) from /amcl_pose
-2. **Local Frame Transformation**: Transforms all lookahead paths from global to local robot frame
-3. **Cost Evaluation**: For each of the 30 steering angles:
-   - Transforms the simulated future trajectory to global frame
-   - Compares it against the reference Bézier curve points in the current window
-   - Calculates a cost metric (error between lookahead path and reference curve)
-4. **Optimal Steering Selection**: Selects the steering angle with minimum cost
-5. **Velocity Computation**: Calculates individual wheel velocities from the desired steering angle using Ackermann steering kinematics
-6. **Command Publication**: Publishes velocity commands to the robot
-7. **Window Advancement**: If robot is within threshold distance of the next waypoint, advances the tracking window
-8. **Completion Check**: If no waypoints remain, stops the robot and saves results
+1. **Pose Reception**: Receives current robot position (x, y) and orientation (yaw) from /amcl_pose;
+2. **Local Frame Transformation**: Transforms all lookahead paths from global to local robot frame;
+3. **Cost Evaluation**: For each of the steering angles:
+   - Transforms the simulated future trajectory to global frame;
+   - Compares it against the reference Bézier curve points in the current window;
+   - Calculates a cost metric (error between lookahead path and reference curve).
+4. **Optimal Steering Selection**: Selects the steering angle with minimum cost;
+5. **Velocity Computation**: Calculates individual wheel velocities from the desired steering angle using, as of now, Ackermann steering kinematics;
+6. **Command Publication**: Publishes velocity commands to the robot;
+7. **Window Advancement**: If robot is within threshold distance of the next waypoint, advances the tracking window;
+8. **Completion Check**: If no waypoints remain, stops the robot and saves results.
 
 **Steering Angle to Wheel Velocity Conversion**
 -----------------------------------------------------
@@ -185,51 +189,31 @@ Bézier Curve Generation and Fitting
 
 The repeat method uses Bézier curves instead of raw waypoint following for several reasons:
 
-- **Smoothness**: Creates a smooth, continuous path rather than discrete waypoints
-- **Path Reduction**: A Bézier curve can approximate many raw points with fewer control points
-- **Noise Filtering**: Inherently smooths out small errors or noise in the taught path
-- **Differentiability**: Enables computation of path curvature and derivatives
-- **Optimized Following**: Provides better reference trajectories for lookahead planning
+- **Smoothness**: Creates a smooth, continuous path rather than discrete waypoints;
+- **Path Reduction**: A Bézier curve can approximate many raw points with fewer control points;
+- **Noise Filtering**: Inherently smooths out small errors or noise in the taught path;
+- **Differentiability**: Enables computation of path curvature and derivatives;
 
 **Bézier Curve Fitting Process**
 --------------------------------------
 
 The fitting process uses the **BezierFitDemo** algorithm:
 
-1. **Input**: Raw waypoints from taught path (typically 50-200+ points depending on path length)
-2. **Algorithm**: Least-squares Bézier fitting determines optimal control point positions
-3. **Control Point Computation**: The algorithm minimizes the error between the raw points and the fitted curve
-4. **Output**: A Bézier curve defined by its control points that approximates the taught path
+1. **Input**: Raw waypoints from taught path;
+2. **Algorithm**: Least-squares Bézier fitting determines optimal control point positions;
+3. **Control Point Computation**: The algorithm minimizes the error between the raw points and the fitted curve;
+4. **Output**: A Bézier curve defined by its control points that approximates the taught path.
 
-The degree of the Bézier curve (number of control points - 1) is chosen to balance:
-- Fidelity to the original path
-- Computational efficiency
-- Numerical stability
 
 **Curve Generation and Storage**
 -------------------------------------
 
 After fitting:
 
-1. **Bézier Curve Generation**: The curve is evaluated at many parameter values (t from 0 to 1) to generate a dense set of waypoints
-2. **Point Resampling**: The generated curve is resampled to guarantee ``dist_btw_points`` spacing
-3. **Storage**: The resampled Bézier curve points are saved to ``bezier_path_coords_data.txt`` in the execution folder
-4. **Variable Assignment**: These resampled points become the reference trajectory (``bezier_path_coords``)
-
-**Bézier Curve Output File Format**
------------------------------------------
-
-The Bézier curve is stored as comma-separated x,y coordinates:
-
-::
-
-    1.234,5.678
-    1.254,5.698
-    1.274,5.718
-    1.294,5.738
-    ...
-
-Each line represents a waypoint on the smoothed Bézier curve, uniformly spaced at ``dist_btw_points`` distance apart.
+1. **Bézier Curve Generation**: The curve is evaluated at many parameter values (t from 0 to 1) to generate a dense set of waypoints;
+2. **Point Resampling**: The generated curve is resampled to guarantee ``dist_btw_points`` spacing;
+3. **Storage**: The resampled Bézier curve points are saved to ``bezier_path_coords_data.txt`` in the execution folder;
+4. **Variable Assignment**: These resampled points become the reference trajectory (``bezier_path_coords``).
 
 
 Lookahead Path Generation
@@ -238,38 +222,25 @@ Lookahead Path Generation
 **Concept of Lookahead Paths**
 -----------------------------------
 
-Lookahead paths are simulated future trajectories of the robot corresponding to each possible steering angle. They represent "what would the robot's path look like if I applied steering angle θ?" This enables the algorithm to:
+Lookahead paths are simulated future trajectories of the robot corresponding to each possible steering angle. They represent "what would the robot's path look like if I applied steering angle θ?". It is very much based on a DWA local planner and enables the algorithm to:
 
-- Predict future motion before committing to a steering command
-- Evaluate multiple steering options simultaneously
-- Select the steering that best aligns with the desired Bézier curve
+- Predict future motion before committing to a steering command;
+- Evaluate multiple steering options simultaneously;
+- Select the steering that best aligns with the desired Bézier curve.
 
 **Lookahead Path Generation Process**
 -------------------------------------------
 
 For each of the ``lookahead_total_paths`` steering angles:
 
-1. **Initial Setup**: Start with robot at origin in local frame reference
+1. **Initial Setup**: Start with robot at origin in local frame reference;
 2. **Trajectory Simulation**: Simulate robot motion using kinematic equations:
-   - Assume constant velocity (``tractor_velocity``)
-   - Apply the given steering angle
+   - Assume constant velocity (``tractor_velocity``);
+   - Apply the given steering angle;
    - Compute the curvature of motion: :math:`\kappa = \frac{\tan(\text{steering})}{\text{wheelbase}}`
-3. **Point Generation**: Generate ``points_per_paths`` future waypoints along this simulated trajectory
-4. **Point Spacing**: Ensure points are spaced at ``dist_btw_points`` distance
-5. **Storage**: Store in dictionary with steering angle as key
-
-**Steering Angle Distribution**
--------------------------------------
-
-The ``lookahead_total_paths`` steering angles are distributed uniformly between ``min_steering`` and ``max_steering``:
-
-.. math::
-
-    \text{angle\_i} = \text{min\_steering} + \frac{i}{\text{lookahead\_total\_paths} - 1} \times (\text{max\_steering} - \text{min\_steering})
-
-For default parameters with 30 paths, ``min_steering=-0.5``, ``max_steering=0.5``:
-- Steering angles range from -0.5 to +0.5 radians
-- Resolution: approximately 0.0345 radians (≈2 degrees) between paths
+3. **Point Generation**: Generate ``points_per_paths`` future waypoints along this simulated trajectory;
+4. **Point Spacing**: Ensure points are spaced at ``dist_btw_points`` distance;
+5. **Storage**: Store in dictionary with steering angle as key.
 
 
 Path Following Mechanism
@@ -284,43 +255,19 @@ At each cycle, the algorithm compares each lookahead path against the reference 
 
     \text{cost} = \sum_{i=0}^{n} \text{distance}(\text{lookahead\_point}_i, \text{reference\_point}_i)
 
-This measures how well the simulated future trajectory aligns with the desired path. Lower cost indicates better alignment.
+This measures how well the simulated future trajectory aligns with the desired path.
 
 **Steering Angle Selection**
 ---------------------------------
 
 From all ``lookahead_total_paths`` evaluated steering angles:
 
-1. **Cost Calculation**: Compute cost for each steering angle
-2. **Minimum Selection**: Select the steering angle with minimum cost
-3. **Storage**: Store as ``desired_steering_angle``
-4. **Path Storage**: Store corresponding lookahead path as ``best_lookahead_path``
+1. **Cost Calculation**: Compute cost for each steering angle;
+2. **Minimum Selection**: Select the steering angle with minimum cost;
+3. **Storage**: Store as ``desired_steering_angle``;
+4. **Path Storage**: Store corresponding lookahead path as ``best_lookahead_path``.
 
 This greedy approach ensures the robot follows the steering that best matches the reference path at each moment.
-
-**Coordinate Frame Transformations**
-------------------------------------------
-
-The algorithm uses two coordinate frames:
-
-- **Global Frame** (map): Where the taught path and all reference waypoints exist
-- **Local Robot Frame**: Where lookahead paths are initially generated (robot at origin)
-
-Transformation from local to global:
-
-.. math::
-
-    x_{global} = x_{robot} + d \times \cos(\text{angle} + \theta_{robot})
-
-.. math::
-
-    y_{global} = y_{robot} + d \times \sin(\text{angle} + \theta_{robot})
-
-where:
-- :math:`(x_{robot}, y_{robot})` = current robot position
-- :math:`d` = distance from robot to point
-- angle = angle to point in local frame
-- :math:`\theta_{robot}` = current robot heading
 
 
 Real-Time Visualization in RViz
@@ -332,33 +279,18 @@ Real-Time Visualization in RViz
 During path following, the RepeatBezierPath node publishes multiple visualization markers:
 
 - **Raw Points Marker** (GREEN POINTS): published to ``/raw_points``
-  - Type: POINTS
-  - Color: Green (r=0.0, g=1.0, b=0.0)
-  - Size: 0.07 meters
   - Shows the original taught path waypoints
 
 - **Bézier Curve Marker** (RED LINE): published to ``/bezier_curve_marker``
-  - Type: LINE_STRIP
-  - Color: Red (r=1.0, g=0.0, b=0.0)
-  - Width: 0.01 meters
   - Shows the smooth Bézier curve fitted through the raw points
 
 - **Bézier Points Marker** (YELLOW POINTS): published to ``/bezier_points_marker``
-  - Type: POINTS
-  - Color: Yellow (r=1.0, g=1.0, b=0.0)
-  - Size: 0.05 meters
   - Shows the current ``points_per_paths`` window points on the reference curve
 
 - **Lookahead Paths Marker** (BLUE POINTS): published to ``/lookahead_paths_marker``
-  - Type: POINTS
-  - Color: Blue (r=0.0, g=0.0, b=1.0)
-  - Size: 0.05 meters
   - Shows all evaluated lookahead trajectories for all steering angles
 
 - **Selected Lookahead Path Marker** (YELLOW LINE): published to ``/selected_lookahead_path_marker``
-  - Type: LINE_STRIP
-  - Color: Yellow (r=1.0, g=1.0, b=0.0)
-  - Width: 0.01 meters
   - Highlights the optimal lookahead path for the current steering selection
 
 
@@ -367,16 +299,16 @@ Visualization Workflow**
 
 During each update cycle:
 
-1. Raw taught path points are published
-2. All evaluated lookahead paths are published (showing the fan of possibilities)
-3. The current reference window (12 points ahead) is published
-4. The best matching lookahead path is highlighted
-5. Markers are published to ``/teach_and_repeat/teach/dock_markers`` namespace
+1. Raw taught path points are published;
+2. All evaluated lookahead paths are published (showing the fan of possibilities);
+3. The current reference window is published;
+4. The best matching lookahead path is highlighted;
+5. Markers are published to ``/teach_and_repeat/teach/dock_markers`` namespace.
 
 This real-time visualization enables monitoring of:
-- Path fitting quality (red Bézier vs green raw points)
-- Algorithm performance (cost function selection among blue lookahead paths)
-- Robot progress (yellow highlighted optimal path)
+- Path fitting quality (red Bézier vs green raw points);
+- Algorithm performance (cost function selection among blue lookahead paths);
+- Robot progress (yellow highlighted optimal path).
 
 
 Execution Data and Output Files
@@ -385,7 +317,7 @@ Execution Data and Output Files
 **Output Folder Structure**
 --------------------------------
 
-When the node starts, it creates a timestamped folder with the format: ``YYYY-MM-DD_HH-MM-SS/``
+When the node starts, it creates a timestamped folder in path_saves/ with the format: ``YYYY-MM-DD_HH-MM-SS/``.
 
 Inside this folder, the following files are created:
 
@@ -393,64 +325,30 @@ Inside this folder, the following files are created:
 ---------------------
 
 **your_file.txt**
-  - Copy of the original taught path file
-  - Format: x,y coordinates, one per line
-  - Purpose: Reference for comparing followed path
+  - Copy of the original taught path file;
+  - Format: x,y coordinates, one per line;
+  - Purpose: Reference for comparing followed path.
 
 **bezier_path_coords_data.txt**
-  - The smooth Bézier curve waypoints
-  - Format: x,y coordinates at ``dist_btw_points`` spacing
-  - Purpose: Reference trajectory used for lookahead planning
+  - The smooth Bézier curve waypoints;
+  - Format: x,y coordinates at ``dist_btw_points`` spacing;
+  - Purpose: Reference trajectory used for lookahead planning.
 
 **following_data.txt**
-  - Actual positions visited by the robot during path following
-  - Format: x,y coordinates from odometry/localization
-  - Purpose: Comparing actual path vs intended path
+  - Actual positions visited by the robot during path following;
+  - Format: x,y coordinates from odometry/localization;
+  - Purpose: Comparing actual path vs intended path.
 
 **variables.txt**
-  - Key execution parameters and performance metrics
-  - Stored as key-value pairs
+  - Key execution parameters and performance metrics;
+  - Stored as key-value pairs.
   - Content includes:
-    - Robot kinematic parameters (tyre_radius, distance_btw_wheels)
-    - Control parameters (tractor_velocity, threshold_dist)
-    - Lookahead parameters (points_per_paths, lookahead_total_paths)
+    - Robot kinematic parameters (tyre_radius, distance_btw_wheels);
+    - Control parameters (tractor_velocity, threshold_dist);
+    - Lookahead parameters (points_per_paths, lookahead_total_paths).
     - Performance metrics:
-      - **duration_time**: Total execution time in minutes
-      - **erro_percentual**: Error % between original taught path and actual followed path
-      - **erro_percentual_bezier**: Error % between Bézier curve and actual followed path
+      - **duration_time**: Total execution time in minutes;
+      - **erro_percentual**: Error % between original taught path and actual followed path using the ``calculate_erro()`` function;
+      - **erro_percentual_bezier**: Error % between Bézier curve and actual followed path.
 
-**Error Metrics Calculation**
-----------------------------------
-
-Two error metrics are calculated:
-
-- **erro_percentual**: Compares actual path with the original raw taught path using the ``calculate_erro()`` function
-- **erro_percentual_bezier**: Compares actual path with the smoothed Bézier curve approximation
-
-These metrics quantify path following accuracy:
-- 0% = perfect path following
-- Higher % = greater deviation from intended path
-
-The Bézier error is often lower because the curve is smoother and represents what the algorithm was actually trying to follow.
-
-**Variables File Format**
-------------------------------
-
-The variables.txt file contains key-value pairs in text format:
-
-::
-
-    tyre_radius: 0.033
-    max_steering: 0.5
-    min_steering: -0.5
-    tractor_velocity: 0.1
-    points_per_paths: 12
-    dist_btw_points: 0.2
-    lookahead_total_paths: 30
-    threshold_dist: 0.8
-    sim_steps: 100
-    dt: 0.01
-    duration_time: 2.5
-    erro_percentual: 5.3
-    erro_percentual_bezier: 3.1
 
