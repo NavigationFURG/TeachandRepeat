@@ -1,16 +1,16 @@
 
 1. Repeat Method Based on Bézier Curves
-=========================================
+=======================================
 
-Overview
-========
+1.1. Overview
+-------------
 
 The Repeat method based on Bézier curves enables a robot to autonomously follow a previously taught path using Bézier curve fitting and a DWA-based lookahead path planning. The **RepeatBezierPath** ROS2 node loads a pre-recorded path, fits a Bézier curve through the waypoints to create a smooth trajectory, generates multiple lookahead trajectories for different steering angles, and selects the optimal steering command in real-time by comparing each simulated path against the reference curve. This approach smooths discrete waypoints into a continuous curve and optimizes trajectory selection at every step.
 
 Originally, this method was suited for Ackermann robots, but also works in differential robots such as the ones we made experiments with. It is a home-made repeating algorithm, it probably has bugs and so we invite *YOU* to help us improve it! For industry-level operations, we recommend using the repeat method based on Waypoint following, which is developed with Navigation Stack 2 features, which are way more stable and less prone to failures.
 
-Architecture and Core Components
-=============================
+1.2. Architecture and Core Components
+-------------------------------------
 
 The repeat system is implemented through the **RepeatBezierPath** ROS2 node, which operates as an autonomous path follower that:
 
@@ -23,9 +23,8 @@ The repeat system is implemented through the **RepeatBezierPath** ROS2 node, whi
 - Records actual path traversal for path following error analysis;
 - Provides real-time visualization of the Bézier curve, lookahead paths, and robot trajectory.
 
-
-Parameters
-==========
+1.3. Parameters
+---------------
 
 This repeat module is controlled by multiple parameters that determine path smoothness, lookahead planning depth, steering constraints, and robot kinematics. Here, we will try to make them as simple as possible to understand:
 
@@ -34,9 +33,8 @@ This repeat module is controlled by multiple parameters that determine path smoo
 
     We also have a default setup for both turtlebot and the logistics robot from the experiments and videos. They are both available at the github source code, in different branches (feat/turtlebot) and (feat/green).
 
-
-**Velocity and Motion Parameters**
------------------------------------------
+1.3.1. Velocity and Motion Parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **tractor_velocity**
   Type: float  
@@ -59,8 +57,8 @@ This repeat module is controlled by multiple parameters that determine path smoo
   - Computing steering kinematics;
   - Mapping desired curvature to achievable steering angles.
 
-**Steering Control Parameters**
--------------------------------------
+1.3.2. Steering Control Parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **max_steering**
   Type: float  
@@ -80,8 +78,8 @@ This repeat module is controlled by multiple parameters that determine path smoo
   
   The distance threshold between the robot and the next target point on the Bézier curve. When the robot moves within this distance of the current target point, the algorithm advances to the next point in the path, effectively creating a "sliding window" on the curve.
 
-**Lookahead Path Generation Parameters**
-----------------------------------------------
+1.3.3. Lookahead Path Generation Parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **points_per_paths**
   Type: integer  
@@ -101,8 +99,8 @@ This repeat module is controlled by multiple parameters that determine path smoo
   
   The total number of different steering angles evaluated for lookahead path planning. These angles are equally distributed between min_steering and max_steering. Higher values enable finer steering angle resolution but increase computational cost.
 
-**Path Fitting Parameters**
---------------------------------
+1.3.4. Path Fitting Parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Bézier curve fitting uses least-squares optimization to compute control points from the raw taught path. This is handled automatically by the **BezierFitDemo** algorithm without explicit parameter tuning. The algorithm:
 
@@ -110,12 +108,11 @@ The Bézier curve fitting uses least-squares optimization to compute control poi
 - Computes optimal Bézier control points using least-squares fitting;
 - The degree of the Bézier curve is determined by the number of control points needed for good approximation.
 
+1.4. Operating Principles and Path Following
+--------------------------------------------
 
-Operating Principles and Path Following
-========================================
-
-**Initialization and Setup**
----------------------------------
+1.4.1. Initialization and Setup
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Upon node startup, the RepeatBezierPath node performs the following initialization steps:
 
@@ -128,8 +125,8 @@ Upon node startup, the RepeatBezierPath node performs the following initializati
 7. **Marker Setup**: Initializes all visualization markers for RViz;
 8. **Localization Wait**: Waits for the first odometry message from AMCL before starting path following.
 
-**Tracking Window and Sliding Window Mechanism**
------------------------------------------------------
+1.4.2. Tracking Window and Sliding Window Mechanism
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The repeat algorithm uses a **sliding window** approach to focus on the immediate future of the path:
 
@@ -140,8 +137,8 @@ The repeat algorithm uses a **sliding window** approach to focus on the immediat
 
 This mechanism provides computational efficiency and ensure a smoother local path following.
 
-**Real-Time Path Following Cycle**
-----------------------------------------
+1.4.3. Real-Time Path Following Cycle
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Once path following begins, the node executes this cycle at every odometry update (~10 Hz from AMCL):
 
@@ -157,8 +154,8 @@ Once path following begins, the node executes this cycle at every odometry updat
 7. **Window Advancement**: If robot is within threshold distance of the next waypoint, advances the tracking window;
 8. **Completion Check**: If no waypoints remain, stops the robot and saves results.
 
-**Steering Angle to Wheel Velocity Conversion**
------------------------------------------------------
+1.4.4. Steering Angle to Wheel Velocity Conversion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The node converts desired steering angles to differential wheel velocities using:
 
@@ -180,12 +177,11 @@ These wheel speeds are then converted to linear and angular velocity commands:
 
     v_{angular} = \frac{\text{right\_wheel\_speed} - \text{left\_wheel\_speed}}{\text{distance\_btw\_wheels}}
 
+1.5. Bézier Curve Generation and Fitting
+----------------------------------------
 
-Bézier Curve Generation and Fitting
-====================================
-
-**Why Bézier Curves**
----------------------------
+1.5.1. Why Bézier Curves
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 The repeat method uses Bézier curves instead of raw waypoint following for several reasons:
 
@@ -194,8 +190,8 @@ The repeat method uses Bézier curves instead of raw waypoint following for seve
 - **Noise Filtering**: Inherently smooths out small errors or noise in the taught path;
 - **Differentiability**: Enables computation of path curvature and derivatives;
 
-**Bézier Curve Fitting Process**
---------------------------------------
+1.5.2. Bézier Curve Fitting Process
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The fitting process uses the **BezierFitDemo** algorithm:
 

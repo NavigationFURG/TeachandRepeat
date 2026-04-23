@@ -1,11 +1,14 @@
+Teaching Method Overview
+========================
+
 1. Overview
-============================
+-----------
 
 The Teaching method is a path learning technique that allows a robot to record its trajectory while being manually guided through an environment. The recorded path can later be replayed by the Repeat module for autonomous navigation. This section provides a detailed explanation of how the teaching mechanism works, its core parameters, data recording formats, and reference frame options.
 
 
 2. Architecture and Core Components
-====================================
+-----------------------------------
 
 The teaching system is implemented through the **TeachPathCoords** ROS2 node, which runs as a standalone service that:
 
@@ -18,12 +21,12 @@ The teaching system is implemented through the **TeachPathCoords** ROS2 node, wh
 
 
 3. Main Parameters
-==================
+------------------
 
 The teaching module is controlled by two primary parameters that determine how data is captured and stored:
 
-**3.1. reference_frame**
------------------------
+3.1. reference_frame
+~~~~~~~~~~~~~~~~~~~~
 
 Type: string  
 Accepted values: ``'odom'`` or ``'map'``  
@@ -40,8 +43,8 @@ The choice between odom and map depends on the application context:
 - Use **'map'** for long-distance paths or when consistency is required.
 
 
-**3.2. teach_orientation**
----------------------------
+3.2. teach_orientation
+~~~~~~~~~~~~~~~~~~~~~~
 
 Type: boolean  
 Accepted values: ``True`` or ``False``  
@@ -55,10 +58,10 @@ This parameter controls whether the robot's heading (yaw angle) is recorded alon
 
 
 4. Operating Principles and Data Recording
-============================================
+------------------------------------------
 
-**4.1. Recording Lifecycle**
-----------------------------
+4.1. Recording Lifecycle
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 The teaching process follows these steps:
 
@@ -77,8 +80,8 @@ The teaching process follows these steps:
 
 5. **Termination**: When the user presses CTRL+C, the process terminates without automatically saving. The user must explicitly save the path using the service call.
 
-**4.2. Time Interval and Sampling Rate**
-----------------------------------------
+4.2. Time Interval and Sampling Rate
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The node implements a deliberate 1.5-second sleep between consecutive waypoint recordings. This interval serves multiple purposes:
 
@@ -88,8 +91,8 @@ The node implements a deliberate 1.5-second sleep between consecutive waypoint r
 
 The resulting sampling rate of approximately one waypoint per 1.5 seconds means a 100-meter path with 10 meters between waypoints would require approximately 150 seconds (2.5 minutes) to record. This is very biased to our experimental setup with turtlebot and the industrial robot, and can be easily modified in the source code for your needs.
 
-**4.3. Data Point Extraction Process**
---------------------------------------
+4.3. Data Point Extraction Process
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When the callback function receives a new pose message, the following extraction occurs:
 
@@ -109,10 +112,10 @@ Note: The z-coordinate of orientation is used to represent the yaw angle (rotati
 
 
 5. File Storage Format
-======================
+----------------------
 
-**5.1. File Naming and Location**
----------------------------------
+5.1. File Naming and Location
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Recorded paths are saved in the ``path_saves/`` directory at the root of the TeachandRepeat workspace:
 
@@ -120,8 +123,8 @@ Recorded paths are saved in the ``path_saves/`` directory at the root of the Tea
 
 The user provides the ``path_name`` when calling the save service. If no name is provided, the default name ``path_coords`` is used.
 
-**5.2. Text Format for Position-Only Paths (teach_orientation=False)**
-----------------------------------------------------------------------
+5.2. Text Format for Position-Only Paths (teach_orientation=False)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Each line in the text file contains two comma-separated floating-point values representing the x and y coordinates of a single waypoint, just as the example below:
 
@@ -139,8 +142,8 @@ Format specification:
 - Each value represents meters from the initial pose estimation. If ``/odom`` was chosen as the reference frame, it is relative to the initial robot pose. If ``/amcl_pose``, it is relative to the first 2d pose estimate given;
 - No header or metadata, but it would be cool to have as future works!
 
-**5.3. Text Format for Oriented Paths (teach_orientation=True)**
-----------------------------------------------------------------
+5.3. Text Format for Oriented Paths (teach_orientation=True)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Each line in the text file contains three comma-separated floating-point values representing the x and y coordinates and the yaw angle of a single waypoint:
 
@@ -159,8 +162,8 @@ Format specification:
 - Third value: yaw angle in radians;
 - No header or metadata.
 
-**5.4. File Writing Logic**
----------------------------
+5.4. File Writing Logic
+~~~~~~~~~~~~~~~~~~~~~~~
 
 The file is written using one of two functions depending on the ``teach_orientation`` setting:
 
@@ -172,10 +175,10 @@ Both functions create the parent directory if it does not exist and use UTF-8 en
 
 
 .. 6. Reference Frame Selection
-.. ============================
+.. ----------------------------
 
-.. **6.1. Odometry Frame (/odom)**
-.. -------------------------------
+.. 6.1. Odometry Frame (/odom)
+.. ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. When ``reference_frame='odom'``:
 
@@ -199,8 +202,8 @@ Both functions create the parent directory if it does not exist and use UTF-8 en
 ..   - Path validity limited to the current robot session
 ..   - Cannot be reused across different robot initializations without careful alignment
 
-.. **6.2. Map Frame (/map)**
-.. ------------------------
+.. 6.2. Map Frame (/map)
+.. ~~~~~~~~~~~~~~~~~~~~~
 
 .. When ``reference_frame='map'``:
 
@@ -224,8 +227,8 @@ Both functions create the parent directory if it does not exist and use UTF-8 en
 ..   - Localization must be initialized correctly before starting recording
 ..   - Requires AMCL or similar localization system to be running
 
-.. **6.3. Frame Selection Impact on Repeat Performance**
-.. -----------------------------------------------------
+.. 6.3. Frame Selection Impact on Repeat Performance
+.. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. The reference frame choice directly affects how the Repeat module performs path following:
 
@@ -236,27 +239,27 @@ Both functions create the parent directory if it does not exist and use UTF-8 en
 
 
 6. Real-Time Visualization in RViz
-===================================
+----------------------------------
 
-**6.1. Published Markers**
---------------------------
+6.1. Published Markers
+~~~~~~~~~~~~~~~~~~~~~~
 
 During path recording, the TeachPathCoords node publishes visualization markers to aid in real-time monitoring:
 
 - **Path marker** (RED LINE): published to ``/teach_and_repeat/teach/path_marker``
   - Includes all recorded waypoints connected in order.
 
-**6.2. Frame Consistency**
---------------------------
+6.2. Frame Consistency
+~~~~~~~~~~~~~~~~~~~~~~
 
 All markers use the same reference frame as the pose data (either "odom" or "map"). The markers are updated with current timestamp headers before each publication.
 
 
 7. Service Interface
-=====================
+--------------------
 
-**7.1. SavePath Service**
-------------------------
+7.1. SavePath Service
+~~~~~~~~~~~~~~~~~~~~~
 
 Service name: ``/teach_and_repeat/teach/save_path``  
 Service type: ``teach_and_repeat/SavePath``
