@@ -1,4 +1,4 @@
-4. Repeat with Nav2 Guide
+4. Repeat Guide using Waypoint Following (Nav2)
 =========================
 
 Along with the repeat method shown in :ref:`repeat_bezier`, we also make available repeating a path using local (and global, if necessary) planners available in Navigation Stack 2 packages. By using the waypoint following method of navigating, we transform every point from a learned path in a waypoint, thus allowing paths to be repeated using the product-level technology from the Nav2 stack.

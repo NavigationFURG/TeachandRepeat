@@ -3,7 +3,7 @@
 2. Teach Guide
 ================
 
-To first-time users of the teach module from T&R package, follow the instructions below, It is expected that you already have followed the installation steps in the :ref:`getting_started` guide.
+To first-time users of the teach module from FBOT T&R package, follow the instructions below, It is expected that you already have followed the installation steps in the :ref:`getting_started` guide.
 
 1. Navigate to the root of your workspace and source it:
 

@@ -1,10 +1,12 @@
 .. _repeat_bezier:
 
 
-3. Repeat Guide
+3. Repeat Guide using Bézier Curves
 ================
 
-To follow a path, first ensure that the coordinates from the path demonstration are stored in the `path_saves/your_file.txt` file. This file is also the default file read during the path following process. Make sure you start from the same point where the demonstration began.
+This is the guide for using the Repeat module with the Bézier curve approach. If you have not yet taught a path, please follow the :ref:`teach_guide` first to record a path demonstration. This guide assumes that you have already set up your workspace and installed the necessary dependencies as outlined in the :ref:`getting_started` guide. If you are interested in using the Repeat module with Navigation Stack 2 (Nav2), please refer to the :ref:`repeat_nav2` guide instead.
+
+To follow a path using our Bézier curve implementation, first ensure that the coordinates from the path demonstration are stored in the `path_saves/your_file.txt` file. This file is also the default file read during the path following process. Make sure you start from the same point where the demonstration began.
 
 1. Navigate to the root of your workspace and source it:
 

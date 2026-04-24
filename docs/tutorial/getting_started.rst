@@ -5,6 +5,8 @@
 
 This repository implements the FBOT **Teach and Repeat** (T&R) framework for mobile robots, allowing them to autonomously follow previously demonstrated paths.
 
+For the remainder of this tutorial, we suppose that you are familiar with how to use basic features of ROS2, Navigation Stack 2 and the Turtlebot package. For more information about [Navigation Stack 2](https://docs.nav2.org/) and [Turtlebot](https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/) features, please proceed to their respective pages.
+
 Requirements
 ************
 
@@ -102,7 +104,7 @@ Configure TurtleBot3 environment variables:
 .. code-block:: bash
 
     source /opt/ros/humble/setup.bash 
-    export TURTLEBOT3_MODEL=burger  # Iron and older only with Gazebo Classic 
+    export TURTLEBOT3_MODEL=waffle  # Iron and older only with Gazebo Classic 
     export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/humble/share/turtlebot3_gazebo/models # Iron and older only with Gazebo Classic
 
 .. note::
