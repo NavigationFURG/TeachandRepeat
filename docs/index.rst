@@ -1,7 +1,7 @@
 Teach and Repeat using Bézier Curves
 ====================================
 
-.. youtube:: crmZR9EUTow
+.. youtube:: 0qg6E9y5eEw
 
 
 Teach and Repeat (T&R) is a navigation system for mobile robots that allows them to autonomously follow previously demonstrated paths. Consisting of two main modules, the **Teach** module records the robot's movements during a demonstration, while the **Repeat** module enables the robot to autonomously follow the recorded path. It works out-of-the-box for differential drive robots, and can be adapted to other types of robots with simple modifications.
@@ -15,6 +15,7 @@ If it is your first time using the package, it is recommended to follow the :ref
    :caption: Contents:
 
    tutorial/index
+   videos/index
    teaching_method/index
    repeat_method/index
 
