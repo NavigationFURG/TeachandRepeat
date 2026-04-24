@@ -1,3 +1,5 @@
+.. _teaching_method:
+
 2. Teach Method
 ================
 

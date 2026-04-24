@@ -3,7 +3,7 @@
 1. Getting Started
 ###################
 
-This repository implements a **Teach and Repeat** (T&R) navigation system for mobile robots, allowing them to autonomously follow previously demonstrated paths.
+This repository implements the FBOT **Teach and Repeat** (T&R) framework for mobile robots, allowing them to autonomously follow previously demonstrated paths.
 
 Requirements
 ************
@@ -22,7 +22,7 @@ Requirements
 Installation
 ************
 
-To set up the Teach and Repeat system, follow these steps:
+To set up FBOT Teach and Repeat system, follow these steps:
 
 First, create a workspace directory and navigate into it:
 

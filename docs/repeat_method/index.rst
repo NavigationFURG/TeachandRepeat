@@ -1,3 +1,5 @@
+.. _repeating_method:
+
 3. Repeat Method
 ================
 
